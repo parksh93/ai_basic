@@ -11,10 +11,17 @@ y = np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
 print(x.shape)  # (20,)
 print(y.shape)  # (20,)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=0, shuffle=False)
 
 model = Sequential()
 model.add(Dense(1, input_dim=1))
+model.add(Dense(100))
+model.add(Dense(100))
+model.add(Dense(100))
+model.add(Dense(100))
+model.add(Dense(100))
+model.add(Dense(100))
+model.add(Dense(100))
 model.add(Dense(100))
 model.add(Dense(100))
 model.add(Dense(100))
@@ -30,9 +37,9 @@ model.compile(loss='mae', optimizer='adam')
 model.fit(x_train, y_train, batch_size=1, epochs=100)
 
 loss = model.evaluate(x_test, y_test)
-print('loss : ', loss)
+print('loss : ', loss)  # loss :  1.5987135171890259
 
 y_predic = model.predict(x_test)
 
 r2 = r2_score(y_test, y_predic)
-print(r2)
+print(r2) # 0.11243664821844768
