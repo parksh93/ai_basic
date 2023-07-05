@@ -8,6 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer, KNNImputer
 
 # 1. 데이터
 path = './data/credit_card_prediction/'
@@ -16,14 +17,19 @@ datasets = pd.read_csv(path + 'train.csv')
 print(datasets.columns)
 print(datasets.head(11))
 
+#  NaN 값 처리
+imputer = SimpleImputer() 
+imputer.fit(datasets)
+data_rsult = imputer.transform(datasets)
+print(data_rsult)
+
 x = datasets[['ID', 'Gender', 'Age', 'Region_Code', 'Occupation', 'Channel_Code',
        'Vintage', 'Credit_Product', 'Avg_Account_Balance', 'Is_Active']]
 y = datasets[['Is_Lead']]
 print(x.shape) # (245725, 10)
 print(y.shape) # (245725, 1)
 
-#  NaN 값 처리
-x = x.fillna(x.mode())
+
 
 # 상관계수 히트맵(heatmap)
 # import matplotlib.pyplot as plt
@@ -70,8 +76,6 @@ kFold = KFold(
     shuffle=True
 )
 
-
-
 param = [
     {'n_estimators' : [100, 500], 'max_depth':[6, 8, 10, 12], 'n_jobs' : [-1, 2, 4]},  
     {'max_depth' : [6, 8, 10, 12], 'min_samples_split' : [2, 3, 5, 10]},
@@ -93,7 +97,7 @@ model = GridSearchCV(
 
 # 3. 훈련
 import time;
-start_time = time.time()
+start_time = time.time() 
 model.fit(x_train, y_train)
 end_time = time.time() - start_time
 
